@@ -33,7 +33,6 @@ public class BookController {
     public String show(@ModelAttribute("human") Person person, @PathVariable("id") int id, Model model) {
         model.addAttribute("book", booksService.findByIdWithPerson(id));
         model.addAttribute("people", peopleService.findAll());
-
         return "books/show";
     }
 
