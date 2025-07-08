@@ -6,6 +6,8 @@ import com.kmdev.springcourse.models.Book;
 import com.kmdev.springcourse.repositories.BooksRepository;
 import com.kmdev.springcourse.repositories.PeopleRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +26,11 @@ public class BooksService {
     public List<Book> findAll() {
        return booksRepository.findAll();
     }
+
+    public Page<Book> findAll(Pageable pageable) {
+        return booksRepository.findAll(pageable);
+    }
+
 
     public Book findById(int id) {
         return booksRepository.findById(id)

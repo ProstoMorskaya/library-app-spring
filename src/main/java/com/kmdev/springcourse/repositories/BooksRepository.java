@@ -1,6 +1,8 @@
 package com.kmdev.springcourse.repositories;
 
 import com.kmdev.springcourse.models.Book;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,4 +21,12 @@ public interface BooksRepository extends JpaRepository<Book, Integer> {
             WHERE b.id = :id
             """)
     Optional<Book> findByIdWithPerson(@Param("id") int id);
+
+    @Query(value = """
+            SELECT b 
+            FROM Book b
+            LEFT JOIN FETCH b.person
+            """, countQuery = "SELECT count(b) FROM Book b")
+    Page<Book> findAll(Pageable pageable);
+
 }
