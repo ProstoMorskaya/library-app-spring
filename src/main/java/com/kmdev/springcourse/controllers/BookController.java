@@ -26,6 +26,7 @@ public class BookController {
     @GetMapping()
     public String index(Model model) {
         model.addAttribute("books", booksService.findAll());
+        
         return "books/index";
     }
 
