@@ -8,6 +8,10 @@ import com.kmdev.springcourse.util.BookCreateValidator;
 import com.kmdev.springcourse.util.BookUpdateValidator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,13 +28,28 @@ public class BookController {
     private final BookUpdateValidator bookUpdateValidator;
 
     @GetMapping()
-    public String index(Model model) {
-        model.addAttribute("books", booksService.findAll());
+    public String index(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+                        @RequestParam(value = "books_per_page", required = false, defaultValue = "10") Integer booksPerPage,
+                        @RequestParam(value = "sort_by_year", required = false, defaultValue = "false") boolean sortByYear,
+                        Model model) {
+        Sort sorting = sortByYear ? Sort.by("yearOfPublication").ascending() : Sort.unsorted();
+        Pageable pageable = PageRequest.of(page, booksPerPage, sorting);
+        Page<Book> pages = booksService.findAll(pageable);
+        var totalCountBooks = pages.getTotalElements();
+        var totalPages = pages.getTotalPages();
+        var books = pages.getContent();
+
+        model.addAttribute("books", books);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("booksPerPage", booksPerPage);
+        model.addAttribute("sortByYear", sortByYear);
+        model.addAttribute("totalCountBooks", totalCountBooks);
         return "books/index";
     }
 
     @GetMapping("/{id}")
-    public String show(@ModelAttribute("human") Person person, @PathVariable("id") int id, Model model) {
+    public String show(@ModelAttribute("person") Person person, @PathVariable("id") int id, Model model) {
         model.addAttribute("book", booksService.findByIdWithPerson(id));
         model.addAttribute("people", peopleService.findAll());
         return "books/show";

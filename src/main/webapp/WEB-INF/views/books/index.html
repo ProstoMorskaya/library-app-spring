@@ -5,16 +5,49 @@
     <title>Все книги</title>
 </head>
 <body>
+<h2>Список книг</h2>
 
+<!-- Сортировка -->
+<form method="get" th:action="@{/books}">
+    <input type="hidden" name="page" value="0"/>
+    <input type="hidden" name="books_per_page" th:value="${booksPerPage != null ? booksPerPage : totalCountBooks}"/>
+    <label>
+        <input type="checkbox" name="sort_by_year" th:checked="${sortByYear}" value="true"
+               onchange="this.form.submit()"/>
+        Сортировать по году публикации
+    </label>
+</form>
+
+<!-- Книги -->
 <div th:each="book : ${books}">
-    <a th:href="@{/books/{id}(id=${book.getId()})}"
-       th:text="${book.name + ', ' + book.author + ', ' + book.yearOfPublication}">user</a>
+    <a th:href="@{/books/{id}(id=${book.id})}"
+       th:text="${book.name + ', ' + book.author + ', ' + book.yearOfPublication}">Книга</a>
 </div>
-<br/>
-<br/>
+
+<br/><br/>
 <hr/>
 
+<!-- Добавление книги -->
 <a href="/books/new">Добавить книгу в библиотеку</a>
+
+<hr/>
+
+<!-- Пагинация -->
+<div th:if="${totalPages > 1}">
+    <div>
+        <a th:if="${currentPage > 0}"
+           th:href="@{/books(page=${currentPage - 1}, books_per_page=${booksPerPage}, sort_by_year=${sortByYear})}">Назад</a>
+
+        <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+            <a th:href="@{/books(page=${i}, books_per_page=${booksPerPage}, sort_by_year=${sortByYear})}"
+               th:text="${i + 1}"
+               th:class="${i == currentPage} ? 'current-page' : ''">1</a>
+        </span>
+
+        <a th:if="${currentPage < totalPages - 1}"
+           th:href="@{/books(page=${currentPage + 1}, books_per_page=${booksPerPage}, sort_by_year=${sortByYear})}">Вперёд</a>
+    </div>
+</div>
 
 </body>
 </html>
