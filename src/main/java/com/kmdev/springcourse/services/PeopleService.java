@@ -5,12 +5,15 @@ import com.kmdev.springcourse.dto.PersonUpdateDto;
 import com.kmdev.springcourse.exception.EntityNotFoundException;
 import com.kmdev.springcourse.mapper.CreatePersonMapper;
 import com.kmdev.springcourse.mapper.UpdatePersonMapper;
+import com.kmdev.springcourse.models.Book;
 import com.kmdev.springcourse.models.Person;
 import com.kmdev.springcourse.repositories.PeopleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,8 +36,16 @@ public class PeopleService {
     }
 
     public Person findByIdWithBooks(int id) {
-        return peopleRepository.findByIdWithBooks(id)
+        var person = peopleRepository.findByIdWithBooks(id)
                 .orElseThrow(() -> new EntityNotFoundException(id));
+        var books = person.getBooks();
+        for (Book book : books) {
+            if (book.getTakenAt() != null) {
+                boolean isOverdue = ChronoUnit.DAYS.between(book.getTakenAt(), LocalDateTime.now()) > 10;
+                book.setOverdue(isOverdue);
+            }
+        }
+        return person;
     }
 
 

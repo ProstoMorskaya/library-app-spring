@@ -1,8 +1,13 @@
 package com.kmdev.springcourse.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -37,4 +42,11 @@ public class Book {
     @NotNull(message = "Дата публикации не может быть null")
     @Max(value = 2025, message = "Можно добавить книгу до 2025 года выпуска")
     private Integer yearOfPublication;
+
+    @Column(name = "taken_at")
+    private LocalDateTime takenAt;
+
+    @Transient
+    private boolean isOverdue;
+
 }

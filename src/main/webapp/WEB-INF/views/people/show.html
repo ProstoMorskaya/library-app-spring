@@ -3,6 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Человек</title>
+    <style>
+        .overdue {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
 <p th:text="${person.initials + ', ' + person.dateOfBirth}">VALUE</p>
@@ -13,7 +19,8 @@
 <div th:if="${!person.books.isEmpty()}">
     <ul>
         <li th:each="book : ${person.books}">
-            <p th:text="${book.name + ', ' + book.author + ', ' + book.yearOfPublication}">Book Info</p>
+            <p th:text="${book.name + ', ' + book.author + ', ' + book.yearOfPublication}"
+               th:classappend="${book.overdue} ? 'overdue' : ''">Book Info</p>
         </li>
     </ul>
 </div>

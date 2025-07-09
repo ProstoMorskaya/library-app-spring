@@ -5,9 +5,11 @@ import com.kmdev.springcourse.mapper.UpdateBookMapper;
 import com.kmdev.springcourse.models.Book;
 import com.kmdev.springcourse.repositories.BooksRepository;
 import com.kmdev.springcourse.repositories.PeopleRepository;
+import com.kmdev.springcourse.specification.BookSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,6 +46,11 @@ public class BooksService {
 
     public Optional<Book> findByName(String name) {
         return booksRepository.findByName(name);
+    }
+
+    public List<Book> searchBooksByPrefix(String prefix) {
+        Specification<Book> spec = BookSpecification.nameStartWith(prefix);
+        return booksRepository.findAll(spec);
     }
 
     @Transactional
