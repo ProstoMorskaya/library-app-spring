@@ -17,6 +17,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/books")
 @RequiredArgsConstructor
@@ -81,6 +83,22 @@ public class BookController {
         }
         booksService.save(book);
         return "redirect:/books";
+    }
+
+    @GetMapping("/search")
+    public String search(@RequestParam(value = "prefix", required = false) String prefix, Model model) {
+        List<Book> books;
+
+        if (prefix == null || prefix.isBlank()) {
+            books = List.of();
+            prefix = "";
+        } else {
+            books = booksService.searchBooksByPrefix(prefix);
+        }
+
+        model.addAttribute("books", books);
+        model.addAttribute("prefix", prefix);
+        return "books/search";
     }
 
     @GetMapping("/{id}/edit")

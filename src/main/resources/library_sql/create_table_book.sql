@@ -3,7 +3,8 @@ CREATE TABLE Book(
     person_id INT REFERENCES Person(id) ON DELETE SET NULL ,
     name VARCHAR(100) NOT NULL ,
     author VARCHAR(100) NOT NULL ,
-    year_of_publication INT NOT NULL
+    year_of_publication INT NOT NULL,
+    taken_at            TIMESTAMP
 );
 
 DROP TABLE Book;

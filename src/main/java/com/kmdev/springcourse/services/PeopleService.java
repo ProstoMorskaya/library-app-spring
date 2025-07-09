@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,8 +35,15 @@ public class PeopleService {
     }
 
     public Person findByIdWithBooks(int id) {
-        return peopleRepository.findByIdWithBooks(id)
+        var person = peopleRepository.findByIdWithBooks(id)
                 .orElseThrow(() -> new EntityNotFoundException(id));
+        person.getBooks().stream()
+                .filter(book -> book.getTakenAt() != null)
+                .forEach(book -> {
+                    boolean isOverdue = ChronoUnit.DAYS.between(book.getTakenAt(), LocalDateTime.now()) > 10;
+                    book.setOverdue(isOverdue);
+                });
+        return person;
     }
 
 

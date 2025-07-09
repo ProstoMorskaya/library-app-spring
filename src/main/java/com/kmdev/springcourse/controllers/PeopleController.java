@@ -30,7 +30,9 @@ public class PeopleController {
 
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model) {
-        model.addAttribute("person", peopleService.findByIdWithBooks(id));
+        var person = peopleService.findByIdWithBooks(id);
+
+        model.addAttribute("person", person);
         return "people/show";
     }
 
