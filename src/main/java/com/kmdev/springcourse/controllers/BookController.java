@@ -17,7 +17,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -91,7 +90,7 @@ public class BookController {
         List<Book> books;
 
         if (prefix == null || prefix.isBlank()) {
-            books = Collections.emptyList();
+            books = List.of();
             prefix = "";
         } else {
             books = booksService.searchBooksByPrefix(prefix);
