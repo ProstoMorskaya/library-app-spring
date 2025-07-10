@@ -13,6 +13,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -77,6 +78,7 @@ public class BooksService {
         var person = peopleRepository.findById(personId)
                 .orElseThrow(() -> new EntityNotFoundException(id));
         book.setPerson(person);
+        book.setTakenAt(LocalDateTime.now());
     }
 
     @Transactional
@@ -84,5 +86,6 @@ public class BooksService {
         var book = booksRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(id));
         book.setPerson(null);
+        book.setTakenAt(null);
     }
 }
