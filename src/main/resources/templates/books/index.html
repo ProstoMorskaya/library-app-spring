@@ -1,10 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Все книги</title>
 </head>
 <body>
+
+<div th:replace="fragments/header :: header"></div>
+
 <h2>Список книг</h2>
 
 <!-- Сортировка -->
@@ -28,7 +32,9 @@
 <hr/>
 
 <!-- Добавление книги -->
+<div sec:authorize="hasAuthority('ADMIN')">
 <a href="/books/new">Добавить книгу в библиотеку</a>
+</div>
 
 <hr/>
 

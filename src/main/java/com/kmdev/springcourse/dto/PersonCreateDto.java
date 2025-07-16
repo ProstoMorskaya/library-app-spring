@@ -21,4 +21,7 @@ public class PersonCreateDto {
 
     @NotNull(message = "Дата рождения не может быть null")
     private String dateOfBirth;
+
+    @NotEmpty(message = "Пароль не должен быть пустым")
+    private String password;
 }

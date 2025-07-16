@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+>
 <head>
     <meta charset="UTF-8">
     <title>Поиск книг</title>
 </head>
 <body>
+
+<div th:replace="fragments/header :: header"></div>
 
 <form th:action="@{/books/search}" method="get">
     <input type="text" name="prefix" placeholder="Введите название книги" th:value="${prefix}"/>
@@ -18,8 +21,10 @@
 <div th:unless="${#lists.isEmpty(books)}">
     <div th:each="book : ${books}">
         <p>
-            <strong th:text="${book.name} + ', ' + ${book.author} + ', ' + ${book.yearOfPublication}">Название
-                книги</strong>
+            <a th:href="@{/books/{id}(id=${book.id})}">
+                <strong th:text="${book.name} + ', ' + ${book.author} + ', ' + ${book.yearOfPublication}">Название
+                    книги</strong>
+            </a>
             <br/>
             <span th:if="${book.person != null}">
                 <span th:text="'Книга сейчас у: ' + ${book.person.initials}"></span>

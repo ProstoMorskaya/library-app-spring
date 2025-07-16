@@ -1,0 +1,5 @@
+ALTER TABLE Person
+    ADD COLUMN password VARCHAR;
+
+ALTER TABLE Person
+    ALTER COLUMN password SET NOT NULL;

@@ -40,5 +40,4 @@ public interface BooksRepository extends JpaRepository<Book, Integer>, JpaSpecif
             """
     )
     List<Book> findByNameStartingWithIgnoreCase(String prefix);
-
 }
