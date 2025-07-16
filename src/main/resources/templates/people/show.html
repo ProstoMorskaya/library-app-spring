@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://thymeleaf.org">
+<html lang="en" xmlns:th="http://thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Человек</title>
@@ -11,6 +12,8 @@
     </style>
 </head>
 <body>
+<div th:replace="fragments/header :: header"></div>
+
 <p th:text="${person.initials + ', ' + person.dateOfBirth}">VALUE</p>
 <div th:if="${person.books.isEmpty()}">
     <p>Человек пока не взял ни одной книги</p>
@@ -28,14 +31,17 @@
 <br/>
 <hr/>
 <br/>
+
+
 <form th:method="GET" th:action="@{/people/{id}/edit(id=${person.getId()})}">
     <input type="submit" value="Редактировать"/>
 </form>
 
+<div sec:authorize="hasAuthority('ADMIN')">
 <form th:method="DELETE" th:action="@{/people/{id}(id=${person.getId()})}">
     <input type="submit" value="Удалить"/>
 </form>
-
+</div>
 
 </body>
 </html>

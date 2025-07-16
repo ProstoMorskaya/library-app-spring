@@ -1,11 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Update person</title>
 </head>
 <body>
+
+<div th:replace="fragments/header :: header"></div>
+
 <form th:method="POST" th:action="@{/people/{id}(id=${person.getId()})}" th:object="${person}">
+
     <input type="hidden" name="_method" value="PATCH"/>
     <label for="initials">Введите ФИО: </label>
     <input type="text" th:field="*{initials}" id="initials"/>
@@ -15,6 +20,22 @@
     <input type="date" th:field="*{dateOfBirth}" id="dateOfBirth"/>
     <div style="color:red" th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{dateOfBirth}">Date of birth Error</div>
     <br/>
+    <label for="password">Введите пароль: </label>
+    <input type="password" th:field="*{password}" id="password" required/>
+    <div style="color:red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</div>
+    <br/>
+
+    <!-- Только для ADMIN -->
+    <div sec:authorize="hasAuthority('ADMIN')">
+        <label for="role">Роль пользователя: </label>
+        <select id="role" th:field="*{role}">
+            <option value="USER" th:selected="${person.role.name() == 'USER'}">Пользователь</option>
+            <option value="ADMIN" th:selected="${person.role.name() == 'ADMIN'}">Администратор</option>
+        </select>
+        <div style="color:red" th:if="${#fields.hasErrors('role')}" th:errors="*{role}">Role Error</div>
+        <br/>
+    </div>
+
     <input type="submit" value="Update!"/>
 </form>
 </body>

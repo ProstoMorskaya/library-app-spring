@@ -23,4 +23,10 @@ public class PersonUpdateDto {
 
     @NotNull(message = "Дата рождения не может быть null")
     private String dateOfBirth;
+
+    @NotEmpty(message = "Пароль не должн быть пустым")
+    private String password;
+
+    private String role;
+
 }

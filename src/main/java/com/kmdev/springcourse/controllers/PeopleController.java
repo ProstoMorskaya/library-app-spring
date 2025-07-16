@@ -3,11 +3,14 @@ package com.kmdev.springcourse.controllers;
 import com.kmdev.springcourse.dto.PersonCreateDto;
 import com.kmdev.springcourse.dto.PersonUpdateDto;
 import com.kmdev.springcourse.models.Person;
+import com.kmdev.springcourse.models.Role;
 import com.kmdev.springcourse.services.PeopleService;
 import com.kmdev.springcourse.util.PeopleCreateValidator;
 import com.kmdev.springcourse.util.PeopleUpdateValidator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,6 +32,7 @@ public class PeopleController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("#id == authentication.principal.person.id or hasAuthority('ADMIN')")
     public String show(@PathVariable("id") int id, Model model) {
         var person = peopleService.findByIdWithBooks(id);
 
@@ -53,21 +57,31 @@ public class PeopleController {
     }
 
     @GetMapping("/{id}/edit")
+    @PreAuthorize("#id == authentication.principal.person.id or hasAuthority('ADMIN')")
     public String edit(Model model, @PathVariable("id") int id) {
         model.addAttribute("person", peopleService.findById(id));
         return "people/edit";
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("#id == authentication.principal.person.id or hasAuthority('ADMIN')")
     public String update(@ModelAttribute("person") @Valid PersonUpdateDto personUpdateDto, BindingResult bindingResult,
-                         @PathVariable("id") int id) {
+                         @PathVariable("id") int id, Authentication authentication) {
         personUpdateDto.setId(id);
         peopleUpdateValidator.validate(personUpdateDto, bindingResult);
         if (bindingResult.hasErrors())
             return "people/edit";
 
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals(Role.ADMIN.name()));
+
+
+        if (!isAdmin) {
+            personUpdateDto.setRole(Role.USER.name());
+        }
+
         peopleService.update(personUpdateDto);
-        return "redirect:/people";
+        return "redirect:/people/{id}";
     }
 
     @DeleteMapping("/{id}")

@@ -32,4 +32,11 @@ public class Person {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
+
+    @Column(name = "password")
+    private String password;
+
+    @Column(name = "role")
+    @Enumerated(EnumType.STRING)
+    private Role role;
 }
