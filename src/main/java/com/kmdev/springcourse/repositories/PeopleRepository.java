@@ -20,6 +20,4 @@ public interface PeopleRepository extends JpaRepository<Person, Integer> {
             WHERE p.id = :id 
             """)
     Optional<Person> findByIdWithBooks(@Param("id") int id);
-
-
 }

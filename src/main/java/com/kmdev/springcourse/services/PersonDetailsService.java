@@ -18,7 +18,6 @@ public class PersonDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         var person = peopleRepository.findByInitials(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Человек с такими инициалами не найден"));
-        ;
         return new PersonDetails(person);
     }
 }
